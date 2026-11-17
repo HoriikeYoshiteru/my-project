@@ -1,11 +1,11 @@
 A = {}
 A[('FDR',1)] = (
-"""SPEC（8B20Z3DA_H100 4.19 Factory Data Reset(FDR)）で、FDRの対象として規定されているのは「DAQログ」のみです（4.19.2 Overview：The following functions of this service are covered. - DAQ log）。VIN以外の初期化対象／保持対象の全項目一覧および各項目の期待値は、提示済みのSPEC（8B20Z3DA_H100 4.19）には規定されていません。
+"""SPEC（8B20Z3DA_H102 4.18 Factory Data Reset(FDR)）で、FDRの対象として規定されているのは「DAQログ」のみです（4.19.2 Overview：The following functions of this service are covered. - DAQ log）。VIN以外の初期化対象／保持対象の全項目一覧および各項目の期待値は、提示済みのSPEC（8B20Z3DA_H102 4.18）には規定されていません。
 
 既存のLv4複合項目書では、DAQログのリセット（SomeIPログも併せて確認）を確認対象としており、確認するデータは「個人情報保護設定_Personal Info Switch」シートの27項目（GNSS位置情報、NAVI位置情報、VIN、SIM／ICCID／TSU_ID等）です。まずはこの範囲を網羅確認の基準としてください。
 
 これ以外の初期化対象一覧が必要な場合は、サプライヤ側の実装仕様の確認が必要です。Honda側で確認し、回答できる時点でご連絡します。""",
-"""SPEC（8B20Z3DA_H100 4.19 FDR）中规定的FDR对象仅为「DAQ日志」。除VIN外的初始化／保留对象完整清单及各项预想值，已提供的SPEC（8B20Z3DA_H100 4.19）中未规定。
+"""SPEC（8B20Z3DA_H102 4.18 FDR）中规定的FDR对象仅为「DAQ日志」。除VIN外的初始化／保留对象完整清单及各项预想值，已提供的SPEC（8B20Z3DA_H102 4.18）中未规定。
 
 既存Lv4复合项目书的确认对象为DAQ日志重置（同时确认SomeIP日志），涉及数据为「个人情报保护设定_Personal Info Switch」表中的27项（GNSS位置信息、NAVI位置信息、VIN、SIM／ICCID／TSU_ID等）。请先以此范围作为完整性确认的基准。
 
@@ -30,3 +30,5 @@ A[('FDR',3)] = (
 另外，错误日志预计保存在TSU内的压缩日志（.gz）中，测试侧可能无法直接确认内容（既存项目书TSU_0008备注）。
 
 以上详细内容需确认供应商实现。Honda方确认后另行回复。""")
+
+MEMO={('FDR',1):'H102 4.18で確認：H100 4.19と同内容（対象=DAQ logのみ）。',('FDR',2):'H102 4.18で確認：H100と同内容。競合ケース表（FDR先発/後発シート）は未確認。',('FDR',3):'H102 4.18で確認：H100と同内容（異常時=エラーログ保存のみ）。'}

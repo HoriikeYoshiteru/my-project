@@ -5,18 +5,14 @@ A[('SEA',1)] = (
 (1) 3DAA_KH_SeA_0005／0007（定期送信300ms中に、イベントで同じALARM状態を再受信するケース）
 　→ 複合(Lv4)では対象外です。異常系（信頼性：Lv5）で対応する項目のため、Lv5信頼性項目書側で実施してください。（備考欄に「信頼性」と記載）
 
-(2) 3DAA_KH_SeA_0009／0010／0012／0013（SVT（Stolen Vehicle Tracking）実行中のALARM受信）
-　→ 他機種(先行)の仕様のため、HC5.0(3DAA)では実施不要です。（HC5.0のSeAはACC/IG OFFの開始条件でのALARM通知のみ。車両位置のトラッキングは対象外）
-
-(3) 3DAA_KH_SeA_0011／0014／0015／0018／0019（Privacy Setting／Subscription／ICB／DSSA・DSSS等の組合せ）
-　→ 同じく他機種(先行)の仕様のため、HC5.0では実施不要です。
+(2) 3DAA_KH_SeA_0009／0010／0012／0013（SVT実行中のALARM受信）、および0011／0014／0015／0018／0019（Privacy Setting／Subscription／ICB／DSSA・DSSS等の組合せ）
+　→ 項目書の備考では「他機種(先行)の仕様のため対象外」としています。一方、SPEC（8B20Z3DA_H102 4.9.2 Table 58）には、SeAの開始条件として Privacy Setting＝ON、SVT＝実行中でない、Subscription＝ON が記載されています。これらのケースの扱い（実施要否）は、Hondaで再確認のうえ、改めてご連絡します。
 
 また、テスト項目_基本動作シートの試験結果欄にある「対象外」は、「ALARM ONを検知すること」のように、後続ステップ（例：Send SeA Requestの送信）の確認で兼ねられるステップを指します（備考欄に理由を記載）。ケース自体を省略する意味ではありません。""",
 """「对象外」分为以下三类，理由已写在用例表（テストケース_基本動作）的备注栏。
 
 (1) 3DAA_KH_SeA_0005／0007（定期发送(300ms)期间，以事件方式再次收到相同ALARM状态）：复合(Lv4)中对象外，由异常系（可靠性Lv5）覆盖，请在Lv5可靠性项目书中实施。
-(2) 3DAA_KH_SeA_0009／0010／0012／0013（SVT执行中收到ALARM）：属于其他机种（先行）的规格，HC5.0(3DAA)无需实施。
-(3) 3DAA_KH_SeA_0011／0014／0015／0018／0019（Privacy Setting／Subscription／ICB／DSSA·DSSS等组合）：同样属于其他机种（先行）的规格，HC5.0无需实施。
+(2) 3DAA_KH_SeA_0009／0010／0012／0013（SVT执行中收到ALARM）及0011／0014／0015／0018／0019（Privacy Setting／Subscription／ICB／DSSA·DSSS等组合）：项目书备注为「属于其他机种（先行）的规格，对象外」。但SPEC（8B20Z3DA_H102 4.9.2 Table 58）中记载了SeA的启动条件为Privacy Setting＝ON、SVT未执行、Subscription＝ON。这些用例是否实施，Honda确认后另行回复。
 
 另外，测试项目表试验结果栏的「对象外」是指该步骤可由后续步骤（如Send SeA Request的发送）一并确认，并非省略整个用例。""")
 
@@ -29,7 +25,7 @@ A[('SEA',2)] = (
 ・3DAA_KH_SeA_0006（ALARM OFF）：0004を実施後、C_SCACTION（ALARM_BCM：0）を送信。Security-Alert requestが送信されないこと。
 ・3DAA_KH_SeA_0008：0006のALARM_BCM：0送信から8sec後にALARM_BCM：1を送信。Security-Alert requestが送信されること。
 ・3DAA_KH_SeA_0017：0006のALARM_BCM：0送信から7sec以内にALARM_BCM：1を送信。ALARM ONを検知せず、送信されないこと。
-・3DAA_KH_SeA_0016：+B OFF（OFFモード）でALARM_BCM：1を送信。項目書の期待動作はLow Powerモードで動作しSeA送信後にOFFモードへ遷移ですが、HC5.0のモード遷移はサプライヤ実装に依存するため、動作結果を見て確認します。
+・3DAA_KH_SeA_0016：+B OFF（OFFモード）でALARM_BCM：1を送信。項目書の期待動作はLow Powerモードで動作しSeA送信後にOFFモードへ遷移ですが、SPEC（H102 4.9.6）では、OFFモードでALARMを検知してSeAを開始した場合は、処理完了後にOFFモードへ戻ると規定されています。経由モードの詳細はサプライヤ実装に依存するため、動作結果を見て確認します。
 ・3DAA_KH_SeA_0020／0021：0001相当の条件で、位置情報が内部メモリにある場合（0020）／ない場合（0021：デフォルト位置情報）。
 
 「対象外」のケース（0005、0007、0009～0015、0018、0019）は実施しないため、手順の提示は不要です。
@@ -41,7 +37,10 @@ A[('SEA',2)] = (
 ・0006：执行0004后发送ALARM_BCM：0，不发送Security-Alert request。
 ・0008：0006发送ALARM_BCM：0后8sec发送ALARM_BCM：1，发送Security-Alert request。
 ・0017：0006发送ALARM_BCM：0后7sec以内发送ALARM_BCM：1，不检测ALARM ON、不发送。
-・0016：+B OFF（OFF mode）发送ALARM_BCM：1。项目书期望为Low Power mode动作并发送SeA后迁移至OFF mode，但HC5.0的模式迁移取决于供应商实现，需根据实际动作确认。
+・0016：+B OFF（OFF mode）发送ALARM_BCM：1。项目书期望为Low Power mode动作并发送SeA后迁移至OFF mode，SPEC（H102 4.9.6）规定：在OFF mode检测到ALARM并开始SeA时，处理完成后返回OFF mode。经由的模式取决于供应商实现，需根据实际动作确认。
 ・0020／0021：与0001相同条件，内部存储器有位置信息（0020）／无位置信息（0021，使用默认位置信息）。
 
 「对象外」用例（0005、0007、0009～0015、0018、0019）不实施，无需提供步骤。DAQ调试日志的设定方法需另行说明，如需要请在本工单咨询。""")
+
+MEMO={('SEA',1):'【要判断】H102 4.9.2 Table 58 に Privacy ON／SVT非実行／Subscription ON が開始条件として記載。項目書備考(2025/5/21 Honda)の「他機種仕様で対象外」と食い違う。送付前に扱いを決める。',
+('SEA',2):'H102 4.9.6 Special Notes（OFFモードでもSeA実行、完了後OFFへ復帰）を0016に反映。ALARM OFF→ON無視の「specified time」はSPEC未数値（7/8secは項目書側の値）。'}

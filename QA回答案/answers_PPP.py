@@ -1,38 +1,20 @@
 A = {}
 NA = "この点は、現時点の仕様書（SW SPEC 8B20Z3DA_H101／3DAA機能仕様）に規定がありません。"
 A[('PPP',1)] = (
-"""授権状態に応じた制限は、3DAA機能仕様の4.3（Table 34〜36）でDAQのアップロード内容として規定されています。確認は、TCU内部ログではなく、アップロードされるデータの内容（リアルタイムデータ／履歴データファイル）で行います。
-・Honda Service Privacy（個人情報授権）がDenied：VINは通常アップロード（履歴データは暗号化VIN）、GNSSは無効値、その他の個人情報も無効値（無効値は「FF」で埋める）
-・Honda Service PrivacyがGrantedで Vehicle Location（位置情報）がDenied：GNSSのみ無効値、VINとその他は通常アップロード
-・両方Granted：全データアップロード
-車内マイク／カメラの授権がDeniedの場合の具体的な機能制限（音声キャプチャ等）の動作は、この仕様には記載がありません。""",
-"""授权状态对应的限制，在3DAA功能规格4.3（Table 34～36）中以DAQ上传内容的形式规定。确认方式为上传数据的内容（实时数据／历史数据文件），而非TCU内部日志。
-・Honda Service Privacy（个人信息授权）为Denied：VIN正常上传（历史数据为加密VIN），GNSS为无效值，其他个人信息也为无效值（无效值填「FF」）
-・Honda Service Privacy为Granted且Vehicle Location（位置信息）为Denied：仅GNSS为无效值，VIN及其他正常上传
-・两者均为Granted：全部数据上传
-车内麦克风／摄像头授权为Denied时的具体功能限制（语音抓取等），本规格中无记载。""")
+'授権状態に応じた制限は、アップロードされるデータの内容で確認します（DAQ仕様の個人情報スイッチ／プライバシー情報スイッチ／GPSスイッチの規定）。内部ログの採取と、制限対象の機能を実際に実行させることの、どちらも必須ではありません。\n・Personal（個人情報授権）がCLOSE：VINは匿名化され、位置情報はアップロードされません\n・Privacy（敏感個人情報授権）またはGPSがCLOSE：位置情報はアップロードされません（履歴ファイル・リアルタイムデータとも）\n確認に使うログは、提供済みのPPP Lv4複合項目書の基本設計に記載のとおり、①SOME/IPログ（DAからの授権設定の受信）、②TSUログ（sv_userlog）、③DAQログ（アップロード内容）です。TSUログでは、キーワード「RcvFF 002A PersonalAuthSettingReq」（DAからのプライバシー設定要求の受信）と「broadCastAuthSettingEvent success」（設定メッセージのブロードキャスト）で確認します。\n車内マイクの音声キャプチャ制限など、上記以外の機能制限の具体的な動作は、現時点の資料には記載がありません。',
+'授权状态对应的限制，通过上传数据的内容确认（DAQ规格中个人信息开关／隐私信息开关／GPS开关的规定）。不要求采集内部日志，也不要求实际执行受限功能。\n・Personal（个人信息授权）为CLOSE：VIN匿名化，位置信息不上传\n・Privacy（敏感个人信息授权）或GPS为CLOSE：位置信息不上传（历史文件、实时数据均适用）\n确认所用日志见已提供的PPP Lv4复合项目书基本设计：①SOME/IP日志（接收DA的授权设置）、②TSU日志（sv_userlog）、③DAQ日志（上传内容）。TSU日志通过关键字「RcvFF 002A PersonalAuthSettingReq」（接收DA的隐私设置请求）和「broadCastAuthSettingEvent success」（广播设置消息）确认。\n车内麦克风语音抓取限制等上述以外的功能限制的具体动作，目前资料中无记载。')
 A[('PPP',2)] = (
 """3DAAの検証では、3DAAの仕様書を基準としてください。3DAAのPPP（Privacy Setting (GB)）の要件は、SW SPEC（8B20Z3DA_H101 4.3）の概要と、3DAA機能仕様の4.3（授権状態の定義、DAQ連動、履歴ファイル名）にあります。ご提示の34AA向け要件書の4.3は別機種の資料で、3DAAとの差異は確認していません。""",
 """3DAA的验证请以3DAA的规格书为准。3DAA的PPP（Privacy Setting (GB)）需求见SW SPEC（8B20Z3DA_H101 4.3）概要及3DAA功能规格4.3（授权状态定义、DAQ联动、历史文件名）。所提34AA需求书4.3为其他机种资料，与3DAA的差异我方未确认。""")
 A[('PPP',3)] = (
-"""0x2030002Aおよび0x2030003Bの内容は、現時点でHondaでも確認できていません（手元のSW SPEC／3DAA機能仕様には、DA-TSU間のPDU内部のメッセージ定義がありません）。DA-TSU間のSOME/IPマトリクス（Ethernet SomeIP Matrix）での確認が必要なため、確認でき次第ご連絡します。""",
-"""0x2030002A与0x2030003B的内容，Honda目前也无法确认（SW SPEC／3DAA功能规格中没有DA-TSU间PDU内部的报文定义）。需通过DA-TSU间SOME/IP矩阵（Ethernet SomeIP Matrix）确认，确认后另行回复。""")
+'0x2030002A は、DAからTSUへのプライバシー設定要求（PersonalAuthSettingReq）です。提供済みのPPP Lv4複合項目書の基本設計に、TSUログのキーワード「RcvFF 002A PersonalAuthSettingReq」（DAからのプライバシー設定要求を受信）の記載があります。\n0x2030003B については、現時点でHondaでも内容を確認できていません（手元のSW SPEC／3DAA機能仕様には、DA-TSU間のPDU内部のメッセージ定義がありません）。DA-TSU間のSOME/IPマトリクス（Ethernet SomeIP Matrix）で確認でき次第、ご連絡します。',
+'0x2030002A是DA向TSU发送的隐私设置请求（PersonalAuthSettingReq）。已提供的PPP Lv4复合项目书基本设计中记载了TSU日志关键字「RcvFF 002A PersonalAuthSettingReq」（接收DA的隐私设置请求）。\n0x2030003B的内容，Honda目前也无法确认（SW SPEC／3DAA功能规格中没有DA-TSU间PDU内部的报文定义）。确认DA-TSU间SOME/IP矩阵（Ethernet SomeIP Matrix）后另行回复。')
 A[('PPP',4)] = (
-"""3DAA機能仕様4.3では、授権状態の関係は次のとおりです。
-・①Honda Service Privacy（レベル1スイッチ）がDeniedの場合、②位置情報／③カメラ／④マイクは判定不要で、全てDenied扱いとなります。
-・②③④（レベル2スイッチ）は、それぞれ自分の項目のみを制御します。
-TSUは、DAから通知された状態を保存して使用します（初期値は全てDenied。DAから取得後はeMMCに保存し、次回起動時に使用）。仕様に、TSUが他の項目の保存値を書き換える（連動してCLOSEにする、再OPEN時に自動復帰させる）という規定はありません。
-したがって、Personal（①）をCLOSEにした場合、他の4項目の保存値は変更されず、有効な権限としてDenied扱いになります。①を再度OPENにすると、②③④はそれぞれの保存値に従います。（「Share」に当たる項目は、3DAA機能仕様4.3の授権状態には定義がありません。）""",
-"""3DAA功能规格4.3中，授权状态的关系如下：
-・①Honda Service Privacy（一级开关）为Denied时，②位置信息／③摄像头／④麦克风无需判定，均视为Denied。
-・②③④（二级开关）只控制各自的项目。
-TSU保存并使用DA通知的状态（初始值全部Denied；从DA获取后保存到eMMC，下次启动时使用）。规格中没有TSU改写其他项目保存值（联动关闭、重新开启时自动恢复）的规定。
-因此，关闭Personal（①）时，其他项目的保存值不变，有效权限视为Denied；重新开启①后，②③④按各自保存值生效。（相当于「Share」的项目，在3DAA功能规格4.3的授权状态中没有定义。）""")
+'確認1：連動します。DAの設定画面では、Personal（個人情報授権）をCLOSEにすると、他の4項目（Privacy／GPS／Mic／Share）も全てCLOSEになります。提供済みPPP Lv4複合項目書の「資料_パラメータ設定」（DA画面で設定できる組合せ）では、Personal＝CLOSEで設定できる組合せは、全項目CLOSEの1通りのみです。\n確認2：Personalを再度OPENにした際に、他の4項目が元のOPENへ自動復帰するかどうかは、DAの画面動作に依存します。現時点の資料には記載がありません。DAでの実機確認結果を、改めてご連絡します。\nなおTSUは、DAから通知された授権状態を保存して使用します（仕様：初期値は全てDenied。DAから取得後はeMMCに保存）。TSU側で他の項目の値を書き換える規定はありません。',
+'确认1：联动。在DA设置画面中，将Personal（个人信息授权）设为CLOSE时，其他4项（Privacy／GPS／Mic／Share）也全部变为CLOSE。已提供的PPP Lv4复合项目书「資料_パラメータ設定」（DA画面可设置的组合）中，Personal＝CLOSE时可设置的组合仅有全部CLOSE这1种。\n确认2：重新将Personal设为OPEN时，其他4项是否自动恢复为原OPEN，取决于DA的画面动作，目前资料中无记载。将另行告知DA实机确认结果。\n另外，TSU保存并使用DA通知的授权状态（规格：初始值全部Denied；从DA获取后保存到eMMC），规格中没有TSU改写其他项目值的规定。')
 A[('PPP',5)] = (
-"""3DAA機能仕様4.3では、②位置情報（GPS）と④マイク（Mic）は、レベル2スイッチとして、それぞれ自分の項目のみを制御します（①Honda Service Privacyのみが②③④を無効にします）。
-ご質問の「Privacy（敏感個人情報授権）」に当たる単独の授権状態は、この仕様の授権状態（①〜④）には定義がありません。そのため、Privacyのみを操作した場合のGPS／Micの連動動作は、現時点の仕様書からは判断できません。NSR様の項目名と仕様書の授権状態（①〜④）との対応関係を、DAからの要求メッセージ定義（PersonalAuthSettingReq）で確認のうえ、改めてご連絡します。""",
-"""3DAA功能规格4.3中，②位置信息（GPS）与④麦克风（Mic）为二级开关，各自只控制自己的项目（仅①Honda Service Privacy会使②③④无效）。
-所问「Privacy（敏感个人信息授权）」对应的独立授权状态，在本规格的授权状态（①～④）中没有定义，因此仅操作Privacy时GPS／Mic是否联动，目前无法从规格书判断。NSR的项目名与规格书授权状态（①～④）的对应关系，将通过DA请求报文定义（PersonalAuthSettingReq）确认后另行回复。""")
+'確認1：連動します。DAの設定画面では、Privacy（敏感個人情報授権）をCLOSEにすると、GPSとMic（車内カメラは3DAAでは対象外）も全てCLOSEになります。提供済みPPP Lv4複合項目書の「資料_パラメータ設定」では、Privacy＝CLOSEで設定できる組合せは、GPS／Mic（／カメラ）が全てCLOSEのものに限られます（Personal・Privacy＝OPENでGPS／MicのみCLOSEにすることは可能）。\n確認2：Privacyを再度OPENにした際に、GPS／Micが元のOPENへ自動復帰するかどうかは、DAの画面動作に依存します。現時点の資料には記載がありません。DAでの実機確認結果を、改めてご連絡します。',
+'确认1：联动。在DA设置画面中，将Privacy（敏感个人信息授权）设为CLOSE时，GPS与Mic（车内摄像头3DAA不在考虑范围）也全部变为CLOSE。已提供的PPP Lv4复合项目书「資料_パラメータ設定」中，Privacy＝CLOSE时可设置的组合仅限GPS／Mic（／摄像头）全部CLOSE（Personal·Privacy＝OPEN时，可仅将GPS／Mic设为CLOSE）。\n确认2：重新将Privacy设为OPEN时，GPS／Mic是否自动恢复为原OPEN，取决于DA的画面动作，目前资料中无记载。将另行告知DA实机确认结果。')
 A[('PPP',6)] = (
 """1. 値定義：3DAA機能仕様4.3では、各授権状態は 0x31＝Denied、0x32＝Granted です（TSU内の初期値は全てDenied）。既存項目書の「1＝CLOSE、2＝OPEN」と、仕様書の0x31／0x32との対応は、DA-TSU間のメッセージ定義での確認が必要です。1／2以外（初期値・未設定値・予約値）、および無効値として扱う値の定義は、仕様書にありません。
 2. 無効な授権値を受信した場合の処理（リクエスト全体の拒否／フィールド単位の処理、無効フィールドの元の状態、同一リクエスト内の他フィールドの扱い、エラーログの内容）は、仕様書に規定がありません。エラーログについては、異常処理時にTSUへエラーログを保存する、という共通規定のみです（キーワード等の規定はありません）。
@@ -41,14 +23,8 @@ A[('PPP',6)] = (
 2. 收到无效授权值时的处理（拒绝整条请求／按字段处理、无效字段的原状态、同一请求中其他字段的处理、错误日志内容），规格书中没有规定。错误日志仅有「异常处理时将错误日志保存在TSU」这一通用规定（无关键字规定）。
 以上属规格未规定，无法确定预想结果。Honda方确认后另行回复。""")
 A[('PPP',7)] = (
-"""仕様書で規定されているのは、授権状態の意味（①Honda Service PrivacyがDeniedの場合、②③④はDenied扱い）のみです。授権の組合せを「制限対象」としてリクエストごと拒否する、といった規定はありません。
-・組合せ①（Personal＝CLOSE、他の4項目＝OPEN）：仕様上、他の項目の保存値は変更されず、有効な権限は全てDenied扱いです。
-・組合せ②（Privacy＝CLOSE、GPS／Mic＝OPEN）：PPP No.5のとおり、Privacy単独の授権状態は仕様書に定義がなく、判断できません。
-リクエスト処理の拒否有無、処理後の設定値、エラーログの内容／キーワードは仕様書に規定がありません。Honda側で確認し、回答できる時点でご連絡します。""",
-"""规格书规定的仅是授权状态的含义（①Honda Service Privacy为Denied时，②③④视为Denied）。没有将授权组合作为「受限组合」而拒绝整条请求之类的规定。
-・组合①（Personal＝CLOSE，其余4项＝OPEN）：按规格，其他项目保存值不变，有效权限均视为Denied。
-・组合②（Privacy＝CLOSE，GPS／Mic＝OPEN）：如PPP No.5所述，Privacy单独的授权状态在规格书中无定义，无法判断。
-是否拒绝请求、处理后的设定值、错误日志内容／关键字，规格书中均无规定。Honda方确认后另行回复。""")
+'ご提示の組合せ（①Personal＝CLOSE・他の4項目＝OPEN、②Privacy＝CLOSE・GPS／Mic＝OPEN）は、DAの設定画面では設定できない組合せです。提供済みPPP Lv4複合項目書でも、これらの組合せは「実施可否＝×（DA画面で設定できないため対象外）」としています。したがって、通常の運用ではDAからTSUへ送信されません。\nこのため、DAを模擬してこれらの組合せを送信した場合の、TSUの期待動作（リクエストの拒否の有無、処理後の各設定値、実際に有効となる権限、エラーログの内容）は、仕様書に規定がなく、現時点で確定できません。なお、TSUの有効な権限は、3DAA機能仕様の規定（Personal（①）がDeniedなら、位置情報・マイクもDenied扱い）に従います。\n追加検証項目とされる場合の期待結果は、Hondaで確認し、改めてご連絡します。',
+'所提组合（①Personal＝CLOSE、其余4项＝OPEN；②Privacy＝CLOSE、GPS／Mic＝OPEN）是DA设置画面中无法设置的组合。已提供的PPP Lv4复合项目书中，这些组合也记为「实施可否＝×（DA画面无法设置，对象外）」。因此正常运用中DA不会向TSU发送。\n因此，模拟DA发送这些组合时TSU的预想动作（是否拒绝请求、处理后各设定值、实际生效权限、错误日志内容），规格书中没有规定，目前无法确定。TSU的有效权限按3DAA功能规格的规定处理（Personal（①）为Denied时，位置信息、麦克风也视为Denied）。\n如作为追加验证项目，预想结果由Honda确认后另行回复。')
 A[('PPP',8)] = (
 NA+"""認可Payloadの構造、欠落・切り詰め・長さ異常の判定条件、および異常受信時の処理（既存の認可状態の保持／変更）は、PPPの仕様書には規定されていません。異常処理時にTSUへエラーログを保存する、という共通規定のみです。DA-TSU間のメッセージ定義（SOME/IPマトリクス）を確認のうえ、改めてご連絡します。""",
 """PPP规格书中未规定授权Payload的结构、缺失・截断・长度异常的判定条件，以及异常接收时的处理（保持／变更既有授权状态）。仅有「异常处理时将错误日志保存在TSU」的通用规定。确认DA-TSU间报文定义（SOME/IP矩阵）后另行回复。""")
@@ -56,11 +32,11 @@ A[('PPP',9)] = (
 NA+"""DAとTSUのVINが不一致の場合の許諾処理、およびVIN一致の要否、要求の送信条件は、PPPの仕様書には規定されていません。Honda側で確認し、回答できる時点でご連絡します。""",
 """PPP规格书中未规定DA与TSU的VIN不一致时的授权处理，以及VIN一致的必要性、请求发送条件。Honda方确认后另行回复。""")
 A[('PPP',10)] = (
-"""eCall終了後のPPP許諾設定の再操作については、3DAAの仕様書に、eCallの終了を契機とした特別な規定はありません。eCallとPPP設定の同時発生時の動作は、サービス競合（Service Priority）の規定に従います。競合ケースの期待動作は、提供済みのPPP Lv4複合項目書の「サービス競合」シートに記載のとおりです。eCall終了後に有効な許諾値で設定操作が再実行できた場合は、通常の設定処理（授権状態の保存）となります。""",
-"""关于eCall结束后重新操作PPP授权设置，3DAA规格书中没有以eCall结束为契机的特别规定。eCall与PPP设置同时发生时的动作遵循服务竞合（Service Priority）规定，竞合用例的预想动作见已提供的PPP Lv4复合项目书「サービス競合」表。eCall结束后以有效授权值重新执行设置操作时，按通常的设置处理（保存授权状态）。""")
+'サービス競合の規定（提供済みPPP Lv4複合項目書の「競合ケース」）では、次のとおりです。\n・PPP設定中にeCallが発生した場合：eCallが実行され、PPP設定は停止します（Update to E-Call）。\n・eCall実行中にPPP設定を操作した場合：PPP設定は動作しません（Not possible）。\neCall終了後にPPP設定を再操作した場合の、特別な規定はありません。有効な許諾値で操作すれば、通常の設定処理（授権状態の保存）となります。',
+'按服务竞合规定（已提供的PPP Lv4复合项目书「競合ケース」）：\n・PPP设置中发生eCall：执行eCall，PPP设置停止（Update to E-Call）。\n・eCall执行中操作PPP设置：PPP设置不动作（Not possible）。\neCall结束后重新操作PPP设置，没有特别规定。以有效授权值操作时，按通常的设置处理（保存授权状态）。')
 A[('PPP',11)] = (
-"""RES Cancel終了後のPPP許諾設定の再操作についても、3DAAの仕様書に、RES Cancelの終了を契機とした特別な規定はありません。同時発生時の動作はService Priorityの規定に従い、競合ケースの期待動作は、提供済みのPPP Lv4複合項目書の「サービス競合」シートに記載のとおりです。RES Cancel終了後に設定操作を再実行した場合は、通常の設定処理（授権状態の保存）となります。""",
-"""关于RES Cancel结束后重新操作PPP授权设置，3DAA规格书中也没有以RES Cancel结束为契机的特别规定。同时发生时的动作遵循Service Priority规定，竞合用例的预想动作见已提供的PPP Lv4复合项目书「サービス競合」表。RES Cancel结束后重新执行设置操作时，按通常的设置处理（保存授权状态）。""")
+'サービス競合の規定（提供済みPPP Lv4複合項目書の「競合ケース」）では、次のとおりです。\n・PPP設定中にRES Cancelが発生した場合：RES Cancelが実行され、PPP設定は停止します（Update to REScancel）。\n・RES Cancel実行中にPPP設定を操作した場合：PPP設定は動作しません（Not possible）。\nRES Cancel終了後にPPP設定を再操作した場合の、特別な規定はありません。有効な許諾値で操作すれば、通常の設定処理（授権状態の保存）となります。',
+'按服务竞合规定（已提供的PPP Lv4复合项目书「競合ケース」）：\n・PPP设置中发生RES Cancel：执行RES Cancel，PPP设置停止（Update to REScancel）。\n・RES Cancel执行中操作PPP设置：PPP设置不动作（Not possible）。\nRES Cancel结束后重新操作PPP设置，没有特别规定。以有效授权值操作时，按通常的设置处理（保存授权状态）。')
 A[('PPP',12)] = (
 """3DAA機能仕様4.3で、Privacy Settingによる制限対象として規定されているのはDAQのアップロード（リアルタイムデータ／履歴データ：Table 34〜36）です。eCallのMSD位置情報をGPS授権（Vehicle Location）で制限するという規定は、仕様書（SW SPEC、3DAA機能仕様、China eCall MASTER）にありません。eCallの仕様では、eCall発信時は位置情報をMSDでTPSPへ送信する、と規定されています（3DAA機能仕様 Location data sharing）。期待結果としては、GPS授権がCLOSEでもMSDの位置情報は通常どおり送信されます。""",
 """3DAA功能规格4.3中，受Privacy Setting限制的对象为DAQ上传（实时数据／历史数据：Table 34～36）。规格书（SW SPEC、3DAA功能规格、China eCall MASTER）中没有以GPS授权（Vehicle Location）限制eCall的MSD位置信息的规定。eCall规格规定，eCall发起时位置信息通过MSD发送给TPSP（3DAA功能规格 Location data sharing）。预想结果：即使GPS授权为CLOSE，MSD位置信息也照常发送。""")

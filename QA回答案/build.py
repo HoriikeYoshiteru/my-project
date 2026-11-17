@@ -15,8 +15,6 @@ for row in ws.iter_rows():
 for c in ws[1]: c.font=Font(bold=True)
 wb.save('QA回答案_261117.xlsx')
 # push用: メモ列を空にした版
-for r in range(2,ws.max_row+1): ws.cell(r,5).value=''
-wb.save('QA回答案_261117.xlsx')
 if M:
     wb2=openpyxl.Workbook();w2=wb2.active;w2.title='根拠メモ'
     w2.append(['シート','No.','根拠メモ(ローカル専用)'])
